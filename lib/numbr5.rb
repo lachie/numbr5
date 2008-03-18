@@ -16,6 +16,13 @@ end
 
 module Numbr5
   Thread.abort_on_exception = true
+  
+  def self.root
+    @root ||= File.expand_path(File.dirname(__FILE__)+'/../')
+  end
+  def self.root_path(*parts)
+    File.join(root,*parts)
+  end
 
   class << self
     def mk_observer(config)
@@ -32,19 +39,31 @@ module Numbr5
         # responders
 
         def response_for_join(subject, message)
+          
           nick = message.prefix.scan(/^[^!]+/o)[0]
-          return if nick == $config.nick
           
-          # raise "moo" if nick == 'lachie'
-          if Faces::Client.new.bother?(nick)
-            puts "bothering..."
-            subject.push privmsg(nick, "Hi #{nick}, I'm numbr5, the #roro bot. Check http://wiki.rubyonrails.com.au/railsoceania/show/Numbr5 for how to talk to me.")
-            subject.push privmsg(nick, "Please consider signing up to the http://faces.rubyonrails.com.au for extra fun in #roro !")
+          # I logged on
+          if nick == $config.nick
+            puts "I joined"
+            p message
+            chan = message.params[0]
+            log_message(chan,'server',"joined #{chan}")
+            
+          # someone else logged on
           else
-            puts "not bothering..."
-          end
           
-          self.add_seen(nick,'coming online')
+            # raise "moo" if nick == 'lachie'
+            if Faces::Client.new.bother?(nick)
+              puts "bothering..."
+              subject.push privmsg(nick, "Hi #{nick}, I'm numbr5, the #roro bot. Check http://wiki.rubyonrails.com.au/railsoceania/show/Numbr5 for how to talk to me.")
+              subject.push privmsg(nick, "Please consider signing up to the http://faces.rubyonrails.com.au for extra fun in #roro !")
+            else
+              puts "not bothering..."
+            end
+          
+            self.add_seen(nick,'coming online')
+            
+          end
         end
         
 
@@ -58,6 +77,8 @@ module Numbr5
           nick = message.prefix.scan(/^[^!]+/o)[0]
           chan = message.params[0]
           text = message.params[1..-1].join(' ')
+          
+          log_message(chan,nick,text)
           
           
           # private message sessions
@@ -147,6 +168,20 @@ module Numbr5
         
         def messages
           @messages ||= []
+        end
+        
+        def log_message(*args)
+          unless @log
+            @log = File.open(Numbr5.root_path('data','messages.tab'),'w')
+            at_exit {
+              if @log
+                @log.flush
+                @log.close
+              end
+            }
+          end
+          @log.puts args.join("\t")
+          @log.flush
         end
         
         # make_session(nick,Sessions::Quoting,text)

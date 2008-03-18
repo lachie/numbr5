@@ -22,7 +22,7 @@ class Seer
   
   protected
   def seer_file
-    File.dirname(__FILE__)+'/seen.yml'
+    @seer_file ||= Numbr5.root_path('data','seen.yml')
   end
   
   def read

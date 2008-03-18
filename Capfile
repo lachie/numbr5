@@ -12,9 +12,9 @@ task :deploy do
   restart
 end
 
-desc "svn up"
+desc "git pull"
 task :update_code do
-  run "cd #{app_path} ; svn up"
+  run "cd #{app_path} ; git pull"
 end
 
 desc "copies the example implementation to the real implementation"

@@ -50,11 +50,11 @@ module Faces
     end
     
     def botherfile
-      File.dirname(__FILE__)+"/bothers.yml"
+      @botherfile ||= Numbr5.root_path('data','bothers.yml')
     end
     
     def bothers
-      @botherfile ||= (YAML.load_file(botherfile) rescue {})
+      @bothers ||= (YAML.load_file(botherfile) rescue {})
     end
     
     def should_bother?(nick)

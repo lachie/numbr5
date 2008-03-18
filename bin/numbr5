@@ -12,6 +12,7 @@ require 'optparse'
 require 'yaml'
 require 'logger'
 require 'pp'
+require 'fileutils'
 
 class Array
   def split_once(obj)
@@ -41,8 +42,6 @@ pwd  = Dir.pwd
 daemon_opts,app_opts = ARGV.split_once('--')
 
 Daemons.run_proc('n5', :backtrace => true, :ARGV => daemon_opts, :log_output => true ) do
-
-
   pp app_opts
   pp daemon_opts
 
@@ -65,6 +64,9 @@ Daemons.run_proc('n5', :backtrace => true, :ARGV => daemon_opts, :log_output => 
   require 'numbr5'
   require 'tumblr_client'
   require 'faces_client'
+  
+  FileUtils::mkdir_p Numbr5.root_path('data'), :mode => 0700
+  
 
 
   $offline = false

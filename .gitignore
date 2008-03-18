@@ -1,2 +1,4 @@
 numbr5rc
 .DS_Store
+data/*
+*.pid
