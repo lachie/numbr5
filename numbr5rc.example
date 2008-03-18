@@ -1,0 +1,10 @@
+nick: x5__
+password: 
+channel: '#roro'
+tumblr_user: xxx
+tumblr_pass: yyy
+flickr_api_key: xxx
+faces_secret: 'yyy'
+irc_server: irc.freenode.net
+faces_url: 'http://faces.rubyonrails.com.au'
+debug: true

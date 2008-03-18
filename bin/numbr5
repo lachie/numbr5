@@ -1,0 +1,92 @@
+#!/usr/bin/env ruby
+#
+#  Created by Lachlan Cox on 2007-05-01.
+#  Copyright (c) 2007. All rights reserved.
+
+
+require 'rubygems'
+require 'daemons'
+require 'pathname'
+require 'ostruct'
+require 'optparse'
+require 'yaml'
+require 'logger'
+require 'pp'
+
+class Array
+  def split_once(obj)
+    index = self.index(obj)
+    
+    index # => nil
+    size # => 0
+    
+    if !index
+      [self,[]]
+    elsif index == 0
+      [[],self[1..size-1]]
+    else
+      [self[0..index-1],self[index+1..size-1]]
+    end
+  end
+end
+
+def get_path(pwd,file)
+  p = Pathname.new(file)
+  p.absolute? ? p : Pathname.new(pwd)+p
+end
+
+here = File.expand_path(File.dirname(__FILE__))
+pwd  = Dir.pwd
+
+daemon_opts,app_opts = ARGV.split_once('--')
+
+Daemons.run_proc('n5', :backtrace => true, :ARGV => daemon_opts, :log_output => true ) do
+
+
+  pp app_opts
+  pp daemon_opts
+
+  $config = conf = OpenStruct.new
+  $logger = Logger.new($stdout)
+  
+  opts = OptionParser.new do |opts|
+    opts.on('-n NNN','numbr5rc'           ) {|n| conf.numbr5rc = get_path(pwd,n)}
+    opts.on('-f FFF','implementation file') {|i| conf.implementation = get_path(pwd,i)}
+  end
+    
+  opts.parse! app_opts
+  
+  YAML.load(File.read(conf.numbr5rc)).each do |k,v|
+    conf.send("#{k}=",v)
+  end
+  
+  $:.unshift "#{here}/../lib"
+
+  require 'numbr5'
+  require 'tumblr_client'
+  require 'faces_client'
+
+
+  $offline = false
+  $debug = (conf.debug rescue false)
+
+  conf.user = conf.nick
+  conf.real = 'rice/irb user'
+
+  require conf.implementation
+
+  pp conf
+
+  $logger.info "connecting..."
+  c = Numbr5.connect conf
+
+  begin
+    c.start
+  rescue RICE::Connection::Closed
+    $logger.error "connection closed"
+  rescue
+    $logger.error "exception: #{$!}"
+    $!.backtrace {|b| puts "  #{b}"}
+  end
+
+end

@@ -1,0 +1,84 @@
+h1. numbr5 is alive!
+
+numbr5 is the #ror_au bot.
+
+He interfaces with the roro faces site to make irc more fun and interesting.
+
+h2. commands
+
+You can get numbr5 to do your bidding by addressing him. For example, to get help:
+
+<pre>
+  $ numbr5: ?h
+</pre>
+
+h3. ?i - insult someone
+
+To hurl a shakespearian insult at someone:
+
+<pre>
+  $ numbr5: ?i lachie
+</pre>
+
+h3. ?w - whois
+
+To see who someone is:
+
+<pre>
+  $ numbr5: ?w bob
+</pre>
+
+The person about whom you're asking must have their nick registered at "faces":http://faces.rubyonrails.com.au
+
+h3. ?f - fortune
+
+To read a snippet of ancient unix wisdom:
+
+<pre>
+  $ numbr5: ?f
+</pre>
+
+h3. ?q - conversation quoter
+
+help TODO
+
+h2. tumblage
+
+If you address numbr5 directly, he'll try to work out what it is you're telling him and post it to "the roro tumblr":http://roro.tumblr.com.
+
+h3. links
+
+Numbr5 understands
+
+* flickr links
+* youtube links
+* plain links
+
+Any trailing text is used as a caption
+
+<pre>
+  $ numbr5: http://whytheluckystiff.net _why still rules
+</pre>
+
+h3. quotes
+
+You can quote yourself or other ppl
+
+From you:
+<pre>
+  $ numbr5: I am so great
+</pre>
+
+Someone else:
+<pre>
+  $ numbr5: lachie: I am so great
+</pre>
+
+h2. thankage
+
+You can owe people beers by thanking them:
+<pre>
+  $ /me thanks ben_a for having us to code the other day
+</pre>
+
+As long as their and your nicks are registered on "faces":http://faces.rubyonrails.com.au, your thanks will be recorded there for all to see.
