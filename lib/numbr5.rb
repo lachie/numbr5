@@ -172,7 +172,7 @@ module Numbr5
         
         def log_message(*args)
           unless @log
-            @log = File.open(Numbr5.root_path('data','messages.tab'),'w')
+            @log = File.open(Numbr5.root_path('data','messages.tab'),'a')
             at_exit {
               if @log
                 @log.flush
