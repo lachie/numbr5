@@ -20,12 +20,12 @@ task :graph do
     size="12,12";
     overlap=scale;
     splines=true;
-    sep=.1;
+    sep=.5;
     margin=".1,.1";
-    
+    bgcolor=white;
 
-  	node [shape = circle, fixedsize=true, fontcolor=red, fontname=Helvetica, fontsize=10, color=blue];
-  	edge [arrowsize=0.35, len=2.0, color=gray];
+  	node [shape = circle, fixedsize=true, fontcolor="#86171d", fontname=Helvetica, fontsize=12, color=blue];
+  	edge [arrowsize=0.5, len=1.0, color="#a6803a"];
   	}
   
   users   = Hash.new {|h,k| h[k] = 0}
@@ -50,7 +50,7 @@ task :graph do
   min = 0.1
   users.each do |(from,count)|
     width = ((count / total.to_f) * (max-min)) + min
-    dot.puts "\t#{from} [width=#{width}];"
+    dot.puts "\t#{from} [width=#{width},label=\"\\N (#{count})\"];"
         
     tos = user_to[from] || {}
     
@@ -62,5 +62,6 @@ task :graph do
   dot.puts "}"
   dot.close
   
-  puts `neato -v -s100 -Tpng graph.dot -O`
+  output = ENV['OUTPUT'] ? "-o #{ENV['OUTPUT']}" : '-O'
+  puts `neato -s100 -Tpng graph.dot #{output}`
 end
