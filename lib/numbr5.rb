@@ -180,6 +180,8 @@ module Numbr5
               end
             }
           end
+          
+          args.unshift Time.now.to_i
           @log.puts args.join("\t")
           @log.flush
         end
